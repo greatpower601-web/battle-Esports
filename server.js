@@ -5,11 +5,17 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Database = require("better-sqlite3");
-
+const fs = require("fs");
 const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const JWT_SECRET = process.env.JWT_SECRET || "dev-only-change-me";
-const db = new Database(path.join(__dirname, "data", "battle-esports.db"));
+const dataDir = path.join(__dirname, "data");
+
+if (!fs.existsSync(dataDir)) {
+  fs.mkdirSync(dataDir, { recursive: true });
+}
+
+const db = new Database(path.join(dataDir, "battle-esports.db"));
 db.pragma("journal_mode = WAL");
 db.pragma("foreign_keys = ON");
 
